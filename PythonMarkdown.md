@@ -41,7 +41,7 @@ Control flow refers to tools a programmer can use to create paths that a program
 | Break             | `break`                                                                                                  |
 | Continue          | `continue`                                                                                               |
 | Pass              | `pass`                                                                                                   |
-| Try-Except        | `try`<br />:    `# code that may raise exception` <br /> `except ExceptionType:`<br />    `# code to execute if exception occurs` 
+| Try-Except        | `try:`<br />    `# code that may raise exception` <br /> `except ExceptionType:`<br />    `# code to execute if exception occurs` 
 
 ```
 example list = list()
