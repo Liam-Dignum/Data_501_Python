@@ -4,7 +4,7 @@
 ### Variables
 Variables act as containers for data such as strings of text or numbers that are created by simply assigning values to them, since a variables type is not declared asigning a new datatype to it will change its type.
 
-Some Example variable eclarations:
+Some Example variable declarations:
 
 
 | Variable Type | Example Declaration                |
@@ -16,7 +16,7 @@ Some Example variable eclarations:
 
 
 ### Collections
-Collections are simply variables that store other variables
+Collections are simply variables that store other variables.
 
 | Variable Type | Example Declaration                | Features                                                                                                                                                                                                             |
 |---------------|------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -43,7 +43,4 @@ Control flow refers to tools a programmer can use to create paths that a program
 | Pass              | `pass`                                                                                                   |
 | Try-Except        | `try:`<br />    `# code that may raise exception` <br /> `except ExceptionType:`<br />    `# code to execute if exception occurs` 
 
-```
-example list = list()
-
-```
+![](Images/Control_flow.png) 
