@@ -1,11 +1,12 @@
 import csv
 from typing import List
+import pytest
 
 
 def extract(filename:str): ##create list of dicts from input filename csv
     with open(filename, 'r') as data:
         reader = csv.DictReader(data)
-        studentdictlist = list()
+        studentdictlist = []
         for row in reader:
             studentdictlist.append(row)
     return studentdictlist
@@ -36,7 +37,7 @@ print(studentdictlist)
 
 ## declare keys to be deleted, remove keys from list of dicts and add an avg score, print new list of dicts
 
-removeKeys = ('Number of Siblings','Lunch Type','Test Preparation','Study Time (hours)','Favorite Subject','Main Teacher')
+removeKeys = ['Number of Siblings','Lunch Type','Test Preparation','Study Time (hours)','Favorite Subject','Main Teacher']
 transform(removeKeys,studentdictlist)
 print(studentdictlist)
 
