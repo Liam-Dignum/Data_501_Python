@@ -3,6 +3,12 @@ print("\nQ1a\n")
 x = [2, 5, 4, 87, 34, 2, 1, 31, 103, 99]
 
 # A1a:
+i = 0
+while i < 5:
+    print(x[i])
+    i+=1
+
+
 
 
 
@@ -11,6 +17,10 @@ print("\nQ1b\n")
 x = [2, 5, 4, 87, 34, 2, 1, 31, 103, 99]
 
 # A1b:
+for i in x:
+    if i % 2 == 0:
+        print(i)
+
 
 
 
@@ -19,8 +29,11 @@ print("\nQ1c\n")
 x = [2, 5, 4, 87, 34, 2, 1, 31, 103, 99]
 
 # A1c:
-
-
+i=0
+while i < 5:
+    if i % 2 == 0:
+        print(x[i])
+    i += 1
 # -------------------------------------------------------------------------------------- #
 
 print("\nQ2a\n")
@@ -29,6 +42,8 @@ print("\nQ2a\n")
 names = ["Alan Turing", "Leonardo Fibonacci", "Katherine Johnson", "Annie Easley", "Terence Tao"]
 
 # A2a:
+for name in names:
+    print(name[0])
 
 
 
@@ -39,7 +54,8 @@ print("\nQ2b\n")
 names = ["Alan Turing", "Leonardo Fibonacci", "Katherine Johnson", "Annie Easley", "Terence Tao"]
 
 # A2b:
-
+for name in names:
+    print(name.index(' '))
 
 
 
@@ -48,6 +64,8 @@ print("\nQ2c\n")
 names = ["Alan Turing", "Leonardo Fibonacci", "Katherine Johnson", "Annie Easley", "Terence Tao"]
 
 # A2c:
+for name in names:
+    print(name[0], ' ', name[name.index(' ')+1])
 
 
 # -------------------------------------------------------------------------------------- #
@@ -62,6 +80,9 @@ list_of_lists = [[1,5,7,3,44,4,1],
 
 
 # A3a:
+for list in list_of_lists:
+    if len(list) == len(set(list)):
+        print(list)
 
 
 # -------------------------------------------------------------------------------------- #
@@ -72,12 +93,53 @@ print("\nQ4a\n")
 # they entered
 
 # A4a:
+complete = 0
+while complete == 0:
+    try:
+        inputnum =int(input('Enter a number above 100\n'))
+    except:
+        print('Not a number')
+        continue
+    if inputnum > 100:
+        print(inputnum)
+        complete +=1
+    else:
+        print('Number not above 100 try again')
+
 
 
 print("\nQ4b\n")
 # Q4b: Continue this code and print "prime" if the number is a prime number and "not prime" otherwise
 
 # A4b:
+def checkIfPrime(num:int):
+    if num > 1:
+
+        # Iterate from 2 to n // 2
+        for i in range(2, (num // 2) + 1):
+
+            # If num is divisible by any number between
+            # 2 and n / 2, it is not prime
+            if (num % i) == 0:
+                print(num, "is not a prime number")
+                break
+        else:
+            print(num, "is a prime number")
+    else:
+        print(num, "is not a prime number")
+complete = 0
+while complete == 0:
+    try:
+        inputnum =int(input('Enter a number above 100\n'))
+    except:
+        print('Not a number')
+        continue
+    checkIfPrime(inputnum)
+    if inputnum > 100:
+        print(inputnum)
+        complete +=1
+    else:
+        print('Number not above 100 try again')
 
 
 
