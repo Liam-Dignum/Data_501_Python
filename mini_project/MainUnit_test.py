@@ -2,33 +2,8 @@ import pytest
 import csv
 from typing import List
 import os
+from Main import extract,transform,load
 
-
-def extract(filename:str): ##create list of dicts from input filename csv
-    with open(filename, 'r') as data:
-        reader = csv.DictReader(data)
-        studentdictlist = []
-        for row in reader:
-            studentdictlist.append(row)
-    return studentdictlist
-
-def transform(keysList: List[str],studentdictlist): ## delete rows from input keyList and add an average score key
-    for row in studentdictlist:
-        for key in keysList:
-            del row[key]
-        Math = int(row['Math Score'])
-        English = int(row['English Score'])
-        Science = int(row['Science Score'])
-        Art = int(row['Art Score'])
-        History = int(row['History Score'])
-        avg = (Math + English + Science + Art + History) / 5
-        row['Average Score'] = avg
-
-def load (filename: str,studentdictlist): ## save list of dicts with input filename
-    with open(filename, "w", newline='') as f:
-        dict_writer = csv.DictWriter(f, studentdictlist[0].keys())
-        dict_writer.writeheader()
-        dict_writer.writerows(studentdictlist)
 testdata = [([{'id1':'0','id2':'1'}],[{'id1':'0','id2':'1'}])]
 @pytest.mark.parametrize('data, expected',testdata)
 

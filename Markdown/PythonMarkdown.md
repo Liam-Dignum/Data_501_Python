@@ -1,6 +1,10 @@
-![](Images/Python_logo.png) 
-## Python Notes
-![](Images/Python_logo.png) 
+
+<div style="display: flex; align-items: center; justify-content: space-between;">
+  <img src="Images/Python_logo.png" alt="Left Image" style="width: 100px; height: auto;">
+  <h2>Python Notes</h2>
+  <img src="Images/Python_logo.png" alt="Right Image" style="width: 100px; height: auto;">
+</div>
+
 ### Variables
 Variables act as containers for data such as strings of text or numbers that are created by simply assigning values to them, since a variables type is not declared asigning a new datatype to it will change its type.
 

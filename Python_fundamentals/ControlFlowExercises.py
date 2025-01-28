@@ -42,8 +42,10 @@ print("\nQ2a\n")
 names = ["Alan Turing", "Leonardo Fibonacci", "Katherine Johnson", "Annie Easley", "Terence Tao"]
 
 # A2a:
+firstinitallist = []
 for name in names:
     print(name[0])
+    firstinitallist.append(name[0])
 
 
 
@@ -54,8 +56,10 @@ print("\nQ2b\n")
 names = ["Alan Turing", "Leonardo Fibonacci", "Katherine Johnson", "Annie Easley", "Terence Tao"]
 
 # A2b:
+indexlist = []
 for name in names:
     print(name.index(' '))
+    indexlist.append(name.index(' '))
 
 
 
@@ -64,8 +68,10 @@ print("\nQ2c\n")
 names = ["Alan Turing", "Leonardo Fibonacci", "Katherine Johnson", "Annie Easley", "Terence Tao"]
 
 # A2c:
+initialslist = []
 for name in names:
     print(name[0], ' ', name[name.index(' ')+1])
+    initialslist.append(name[0] + ' ' + name[name.index(' ')+1])
 
 
 # -------------------------------------------------------------------------------------- #
