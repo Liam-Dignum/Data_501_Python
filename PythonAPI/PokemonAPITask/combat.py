@@ -1,13 +1,16 @@
 import random
 from bdb import effective
 
+from unicodedata import category
+
 
 class Combat:
     def __init__(self,playerpokemon,aipokemom):
         self.playerpokemon = playerpokemon
         self.aipokemon = aipokemom
-        self.self_target_list = ['user']
-        self.enemy_target_list = ['random-opponent', 'selected-pokemon']
+        self.select_target_list = ['selected-pokemon-me-first','selected-pokemon']
+        self.self_target_list = ['user','ally','user-or-ally','user-and-allies','all-allies']
+        self.enemy_target_list = ['random-opponent','all-other-pokemon','all-opponents']
         self.type_effectiveness = {
     "normal": {
         "effective": ["fighting"],
@@ -88,20 +91,64 @@ class Combat:
         "immune": ["dragon"]
     }
 }
+    def status_effect(self,pokemon):
+        turnskip = False
+        for status in pokemon.status:
+            if status['name'] == 'burn':
+                pokemon.currentstats['hp'] -= pokemon.basestats['hp']/16
+                pokemon.currentstats['attack'] = pokemon.basestats['attack']/2
+            if status['name'] == 'freeze':
+                print(f'{pokemon.name} is frozen and cant act')
+                turnskip = True
 
+            if status['name'] == 'paralysis':
+                pokemon.currentstats['speed'] = pokemon.basestats['speed'] / 4
+                if random.randint(0,3) < 1:
+                    print(f'{pokemon.name} is paralysed and cant act')
+                    turnskip = True
+            if status['name'] == 'poison':
+                pokemon.currentstats['hp'] -= pokemon.basestats['hp'] / 16
+            if status['name'] == 'sleep':
+                status['duration'] -= 1
+                print(f'{pokemon.name} is asleep and cant act')
+                turnskip = True
+                if status['duration'] == 1:
+                    print(f'{pokemon.name} has woken up and will act next turn')
 
+    def chose_target(self,attacker,target,move):
+        if move['target'] in self.self_target_list:
+            self.execute_move(attacker,attacker,move)
+            pass
+        elif move['target'] in self.enemy_target_list:
+            self.execute_move(attacker, target, move)
+            pass
+        elif move['target'] in self.select_target_list:
+            while True:
+                print(f'Select Target:\n1.{attacker.name}\n2.{target.name}')
+                try:
+                    user_input = int(input())
+                    if user_input == 1 or user_input == 2:
+                        break
+                except:
+                    print('Enter 1 or 2')
+            if user_input == 1:
+                self.execute_move(attacker, attacker, move)
+            else:
+                self.execute_move(attacker, target, move)
+            pass
     def turn_loop(self):
-        print(f'\n{self.playerpokemon.name} :{self.playerpokemon.currentstats}\n {self.aipokemon.name} :{self.aipokemon.currentstats}\n')
+        print(f'\n{self.playerpokemon.name} :{self.playerpokemon.currentstats}, {self.playerpokemon.status}\n {self.aipokemon.name} :{self.aipokemon.currentstats},{self.aipokemon.status}\n')
         print(f'The player\'s {self.playerpokemon.name}\'s turn')
         user_input = 0
         while user_input not in range (1,5):
             user_input = int(input(f'Select move: \n1.{self.playerpokemon.moves[0]}\n2.{self.playerpokemon.moves[1]}\n3.{self.playerpokemon.moves[2]} \n4.{self.playerpokemon.moves[3]}\n'))
         print(f'{self.playerpokemon.name} used {self.playerpokemon.moves[user_input -1]['name']}\n')
-        try:
-            self.aipokemon.currentstats['hp'] -= self.calc_damage(self.playerpokemon,self.aipokemon,self.playerpokemon.moves[user_input -1])
-        except(TypeError):
-            print('Move has no power')
-            self.move_effect(self.playerpokemon, self.aipokemon,self.playerpokemon.moves[user_input -1])
+        #try:
+        #    self.aipokemon.currentstats['hp'] -= self.calc_damage(self.playerpokemon,self.aipokemon,self.playerpokemon.moves[user_input -1])
+        #except(TypeError):
+        #    print('Move has no power')
+        #    self.move_effect(self.playerpokemon, self.aipokemon,self.playerpokemon.moves[user_input -1])
+        self.chose_target(self.playerpokemon,self.aipokemon,self.playerpokemon.moves[user_input -1])
         print(f'The Enemy {self.aipokemon.name}\'s turn\n')
 
         ai_choice = random.randint(0,3)
@@ -121,6 +168,38 @@ class Combat:
             return
         else:
             self.turn_loop()
+    def execute_move(self,attacker,target,move):
+        damage = [  "damage",
+                    "damage+ailment",
+                    "damage+lower",
+                    "damage+raise",
+                    "damage+heal" ]
+        stat = ["net-good-stats",
+                "damage+lower",
+                "damage+raise"]
+        ailment = ["ailment",
+                "damage+ailment"]
+        if move['category'] in damage:
+            target.currentstats['hp'] -= self.calc_damage(attacker, target, move)
+        if move['category'] in stat:
+            if move['category'] == 'damage+raise':
+                self.move_effect(attacker,attacker,move)
+            else:
+                self.move_effect(attacker, target, move)
+
+        if move['category'] in ailment:
+            if move['ailment_chance'] > 0:
+                if random.randint(0,100) > move['ailment_chance']:
+                    print(f'{move['name']} failed to apply status')
+                    return
+            duration = -1
+            if move['ailment'] == ('sleep'):
+                duration = random.randint(1,7)
+            target.status.append({'name' : move['ailment'], 'duration': duration})
+
+            pass
+        pass
+
 
     def calc_damage(self,attacker,target,move):
         damage = ((2 * self.calc_crit(attacker,move) *40)/5)+2
@@ -177,9 +256,9 @@ class Combat:
         pass
     def move_effect(self,attacker,target,move):
         for effects in move['stat_changes']:
-            if move['target'] == 'user':
-                attacker.stat_stages[effects['stat']['name']] += effects['change']
-                attacker.stat_stage_apply()
-            else:
+            #if move['target'] == 'user':
+            #    attacker.stat_stages[effects['stat']['name']] += effects['change']
+            #    attacker.stat_stage_apply()
+            #else:
                 target.stat_stages[effects['stat']['name']] += effects['change']
                 target.stat_stage_apply()

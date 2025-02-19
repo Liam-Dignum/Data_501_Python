@@ -27,9 +27,12 @@ for items in gen_1_list:
 print(print_string)
 
 gen_1_list[0].get_stats()
+
 gen_1_list[1].get_stats()
-print(gen_1_list[0].name, gen_1_list[0].basestats,gen_1_list[0].type)
-print(gen_1_list[1].name,gen_1_list[1].basestats,gen_1_list[1].type)
+
+print(gen_1_list[0].name, gen_1_list[0].basestats,gen_1_list[0].type,gen_1_list[0].status)
+
+print(gen_1_list[1].name,gen_1_list[1].basestats,gen_1_list[1].type,gen_1_list[1].status)
 
 
 gen_1_list[0].get_move_stats()
