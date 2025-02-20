@@ -93,7 +93,7 @@ class Combat:
 }
     def status_effect(self,pokemon):
         turnskip = False
-        for status in pokemon.status:
+        for i,status in enumerate(pokemon.status):
             if status['name'] == 'burn':
                 pokemon.currentstats['hp'] -= pokemon.basestats['hp']/16
                 pokemon.currentstats['attack'] = pokemon.basestats['attack']/2
@@ -114,6 +114,7 @@ class Combat:
                 turnskip = True
                 if status['duration'] == 1:
                     print(f'{pokemon.name} has woken up and will act next turn')
+                    status[i].pop()
 
     def chose_target(self,attacker,target,move):
         if move['target'] in self.self_target_list:
@@ -123,51 +124,91 @@ class Combat:
             self.execute_move(attacker, target, move)
             pass
         elif move['target'] in self.select_target_list:
-            while True:
-                print(f'Select Target:\n1.{attacker.name}\n2.{target.name}')
-                try:
-                    user_input = int(input())
-                    if user_input == 1 or user_input == 2:
-                        break
-                except:
-                    print('Enter 1 or 2')
-            if user_input == 1:
-                self.execute_move(attacker, attacker, move)
-            else:
-                self.execute_move(attacker, target, move)
+            self.execute_move(attacker, target, move)
+            #while True:
+            #    print(f'Select Target:\n1.{attacker.name}\n2.{target.name}')
+            #    try:
+            #        user_input = int(input())
+            #        if user_input == 1 or user_input == 2:
+            #            break
+            #    except:
+            #        print('Enter 1 or 2')
+            #if user_input == 1:
+            #    self.execute_move(attacker, attacker, move)
+            #else:
+            #    self.execute_move(attacker, target, move)
             pass
-    def turn_loop(self):
-        print(f'\n{self.playerpokemon.name} :{self.playerpokemon.currentstats}, {self.playerpokemon.status}\n {self.aipokemon.name} :{self.aipokemon.currentstats},{self.aipokemon.status}\n')
+    def player_move(self):
+        print(
+            f'\n{self.playerpokemon.name} :{self.playerpokemon.currentstats}, {self.playerpokemon.status}\n {self.aipokemon.name} :{self.aipokemon.currentstats},{self.aipokemon.status}\n')
         print(f'The player\'s {self.playerpokemon.name}\'s turn')
         user_input = 0
-        while user_input not in range (1,5):
-            user_input = int(input(f'Select move: \n1.{self.playerpokemon.moves[0]}\n2.{self.playerpokemon.moves[1]}\n3.{self.playerpokemon.moves[2]} \n4.{self.playerpokemon.moves[3]}\n'))
-        print(f'{self.playerpokemon.name} used {self.playerpokemon.moves[user_input -1]['name']}\n')
+        while user_input not in range(1, 5):
+            user_input = int(input(
+                f'Select move: \n1.{self.playerpokemon.moves[0]}\n2.{self.playerpokemon.moves[1]}\n3.{self.playerpokemon.moves[2]} \n4.{self.playerpokemon.moves[3]}\n'))
+        print(f'{self.playerpokemon.name} used {self.playerpokemon.moves[user_input - 1]['name']}\n')
+        self.chose_target(self.playerpokemon, self.aipokemon, self.playerpokemon.moves[user_input - 1])
+
+    def ai_move(self):
+        print(
+            f'\n{self.playerpokemon.name} :{self.playerpokemon.currentstats}, {self.playerpokemon.status}\n {self.aipokemon.name} :{self.aipokemon.currentstats},{self.aipokemon.status}\n')
+        print(f'The Enemy {self.aipokemon.name}\'s turn\n')
+        ai_choice = random.randint(0, 3)
+        print(ai_choice)
+        print(f'{self.aipokemon.name} used {self.aipokemon.moves[ai_choice]['name']}\n')
+        self.chose_target(self.aipokemon, self.playerpokemon, self.aipokemon.moves[ai_choice])
+
+    def turn_loop(self):
+        #print(f'The player\'s {self.playerpokemon.name}\'s turn')
+        #user_input = 0
+        #while user_input not in range (1,5):
+            #user_input = int(input(f'Select move: \n1.{self.playerpokemon.moves[0]}\n2.{self.playerpokemon.moves[1]}\n3.{self.playerpokemon.moves[2]} \n4.{self.playerpokemon.moves[3]}\n'))
+        # print(f'{self.playerpokemon.name} used {self.playerpokemon.moves[user_input -1]['name']}\n')
         #try:
         #    self.aipokemon.currentstats['hp'] -= self.calc_damage(self.playerpokemon,self.aipokemon,self.playerpokemon.moves[user_input -1])
         #except(TypeError):
         #    print('Move has no power')
         #    self.move_effect(self.playerpokemon, self.aipokemon,self.playerpokemon.moves[user_input -1])
-        self.chose_target(self.playerpokemon,self.aipokemon,self.playerpokemon.moves[user_input -1])
-        print(f'The Enemy {self.aipokemon.name}\'s turn\n')
+        #self.chose_target(self.playerpokemon,self.aipokemon,self.playerpokemon.moves[user_input -1])
+        #print(f'The Enemy {self.aipokemon.name}\'s turn\n')
+#
+        #ai_choice = random.randint(0,3)
+        #print(ai_choice)
+        #print(f'{self.aipokemon.name} used {self.aipokemon.moves[ai_choice]['name']}\n')
+        #self.chose_target(self.aipokemon, self.playerpokemon, self.aipokemon.moves[ai_choice])
+        #print(f'Enemy {self.aipokemon.name} Used {self.aipokemon.moves[ai_choice]['name']}')
+        #try:
+        #    self.playerpokemon.currentstats['hp'] -= self.calc_damage(self.aipokemon,self.playerpokemon, self.aipokemon.moves[ai_choice])
+        #except(TypeError):
+        #    print('Move has no power')
+        #    self.move_effect(self.aipokemon,self.playerpokemon, self.aipokemon.moves[ai_choice])
 
-        ai_choice = random.randint(0,3)
-        print(ai_choice)
+        turn_order = self.turn_order(self.playerpokemon,self.aipokemon)
+        for items in turn_order:
+            if items == self.playerpokemon:
+                self.player_move()
+                self.turn_loop()
+            else:
+                self.ai_move()
+                self.faint_check()
+        self.turn_loop()
 
-        print(f'Enemy {self.aipokemon.name} Used {self.aipokemon.moves[ai_choice]['name']}')
-        try:
-            self.playerpokemon.currentstats['hp'] -= self.calc_damage(self.aipokemon,self.playerpokemon, self.aipokemon.moves[ai_choice])
-        except(TypeError):
-            print('Move has no power')
-            self.move_effect(self.aipokemon,self.playerpokemon, self.aipokemon.moves[ai_choice])
+
+
+    def faint_check(self):
         if self.playerpokemon.currentstats['hp'] <= 0:
             print(f'{self.playerpokemon.name} fainted')
-            return
+            print(
+                f'\n{self.playerpokemon.name} :{self.playerpokemon.currentstats}, {self.playerpokemon.status}\n {self.aipokemon.name} :{self.aipokemon.currentstats},{self.aipokemon.status}\n')
+            input('Any key to exit')
+            quit()
         elif self.aipokemon.currentstats['hp'] <= 0:
             print(f'{self.aipokemon.name} fainted')
-            return
-        else:
-            self.turn_loop()
+            print(
+                f'\n{self.playerpokemon.name} :{self.playerpokemon.currentstats}, {self.playerpokemon.status}\n {self.aipokemon.name} :{self.aipokemon.currentstats},{self.aipokemon.status}\n')
+            input('Any key to exit')
+            quit()
+
     def execute_move(self,attacker,target,move):
         damage = [  "damage",
                     "damage+ailment",
@@ -179,24 +220,26 @@ class Combat:
                 "damage+raise"]
         ailment = ["ailment",
                 "damage+ailment"]
-        if move['category'] in damage:
-            target.currentstats['hp'] -= self.calc_damage(attacker, target, move)
-        if move['category'] in stat:
-            if move['category'] == 'damage+raise':
-                self.move_effect(attacker,attacker,move)
-            else:
-                self.move_effect(attacker, target, move)
+        if self.calc_hit(attacker,target,move):
+            if move['category'] in damage:
+                target.currentstats['hp'] -= self.calc_damage(attacker, target, move)
+            if move['category'] in stat:
+                if move['category'] == 'damage+raise':
+                    self.move_effect(attacker,attacker,move)
+                else:
+                    self.move_effect(attacker, target, move)
 
-        if move['category'] in ailment:
-            if move['ailment_chance'] > 0:
-                if random.randint(0,100) > move['ailment_chance']:
-                    print(f'{move['name']} failed to apply status')
-                    return
-            duration = -1
-            if move['ailment'] == ('sleep'):
-                duration = random.randint(1,7)
-            target.status.append({'name' : move['ailment'], 'duration': duration})
-
+            if move['category'] in ailment:
+                if move['ailment_chance'] > 0:
+                    if random.randint(0,100) > move['ailment_chance']:
+                        print(f'{move['name']} failed to apply status')
+                        return
+                duration = -1
+                if move['ailment'] == ('sleep'):
+                    duration = random.randint(1,7)
+                target.status.append({'name' : move['ailment'], 'duration': duration})
+        else:
+            print(f'{move['name']} missed')
             pass
         pass
 
@@ -262,3 +305,27 @@ class Combat:
             #else:
                 target.stat_stages[effects['stat']['name']] += effects['change']
                 target.stat_stage_apply()
+    def calc_hit(self,attacker,defender,move):
+        if move['accuracy'] == None:
+            return True
+        numerator,denominator = 3,3
+        accuracy = attacker.stat_stages['accuracy']
+        evasion = defender.stat_stages['accuracy']
+        if accuracy > 0:
+            numerator += accuracy
+        else:
+            denominator -= accuracy
+        if evasion > 0:
+            denominator += evasion
+        else:
+            numerator -= evasion
+        modified_accuracy = (numerator/denominator) * move['accuracy']
+        if random.randint(1,100) < modified_accuracy:
+            return True
+        else:
+            return False
+    def turn_order(self,pokemon1,pokemon2):
+        if pokemon1.currentstats['speed']>pokemon2.currentstats['speed']:
+            return [pokemon1,pokemon2]
+        else:
+            return [pokemon2,pokemon1]

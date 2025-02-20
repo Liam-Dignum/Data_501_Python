@@ -20,7 +20,7 @@ class Pokemon:
 
         self.base_url = 'https://pokeapi.co/api/v2/'
         self.currentstats = {}
-        self.stat_stages = {'hp': 0, 'attack': 0, 'defense': 0, 'special-attack': 0, 'special-defense': 0, 'speed': 0}
+        self.stat_stages = {'hp': 0, 'attack': 0, 'defense': 0, 'special-attack': 0, 'special-defense': 0, 'speed': 0,'accuracy':0,'evasion':0}
         requests_cache.install_cache('poke_cache')
         self.gen1moves = []
         add_url = 'generation/1'
@@ -65,9 +65,11 @@ class Pokemon:
             print(self.moves[i])
         pass
     def stat_stage_apply(self):
+        skip_stats = ['accuracy','evasion']
         for stat in self.stat_stages.keys():
-            if stat != 'hp':
-                if self.stat_stages[stat] < 0:
-                    self.currentstats[stat] = round(self.basestats[stat]*(2/((-self.stat_stages[stat])+2)))
-                elif self.stat_stages[stat] > 0:
-                    self.currentstats[stat] = round(self.basestats[stat]*((2+(self.stat_stages[stat]))/2))
+            if stat not in skip_stats:
+                if stat != 'hp':
+                    if self.stat_stages[stat] < 0:
+                        self.currentstats[stat] = round(self.basestats[stat]*(2/((-self.stat_stages[stat])+2)))
+                    elif self.stat_stages[stat] > 0:
+                        self.currentstats[stat] = round(self.basestats[stat]*((2+(self.stat_stages[stat]))/2))
